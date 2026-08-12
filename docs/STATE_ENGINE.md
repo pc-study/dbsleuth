@@ -6,7 +6,7 @@
 |---|---|
 | 版本 | v0.1 Draft |
 | 状态 | 架构提案，待实现与样本验证 |
-| 适用范围 | DBSleuth 独立 CLI 与 TraceMind Incident Snapshot 集成 |
+| 适用范围 | DBSleuth CLI、Agent Snapshot 与 Incident Bundle |
 
 ## 1. 背景
 
@@ -180,7 +180,7 @@ AI 可以归纳状态链、解释术语和生成排查建议，但不能新增�
 ### 6.1 输入来源
 
 - Oracle、Linux 和后续数据库/中间件日志中的确定性事件；
-- TraceMind Incident Snapshot 的标准事件；
+- DBSleuth Incident Snapshot 的标准事件；
 - 指标窗口计算得到的阈值、持续时长、变化率和基线偏离；
 - AWR、等待事件、Zabbix、Prometheus、APM 和操作系统证据；
 - 已验证的上游 `state_code`。
@@ -227,7 +227,7 @@ state_code: 1010
 entity_type + canonical_entity_id + observation_scope
 ```
 
-优先使用 TraceMind CMDB/资产中心的稳定 ID；离线日志没有稳定 ID 时，使用经脱敏的主机名、实例名或来源文件作为临时实体，并设置 `identity_confidence`。
+优先使用 DBSleuth 资产目录的稳定 ID；离线日志没有稳定 ID 时，使用经脱敏的主机名、实例名或来源文件作为临时实体，并设置 `identity_confidence`。
 
 跨层故障模式需要尽量验证拓扑：
 
@@ -332,7 +332,7 @@ redaction-candidates.json
 
 1. 冻结状态字典、Schema 和实体身份规则。
 2. 基于 Oracle Alert 与 Linux 日志实现确定性状态识别。
-3. 接入 TraceMind Snapshot 标准事件和显式状态码。
+3. 接入 DBSleuth Snapshot 标准事件和显式状态码。
 4. 实现状态去重、转换、防抖和时间质量处理。
 5. 实现首批四类故障模式和反证模型。
 6. 接入报告、证据图谱与 AI 受约束解释。
@@ -340,5 +340,5 @@ redaction-candidates.json
 
 ## 13. 配套文档
 
-- [TraceMind 与 DBSleuth 集成设计](TRACEMIND_INTEGRATION.md)
+- [DBSleuth Incident Bundle 设计](DBSLEUTH_INCIDENT_BUNDLE.md)
 - [从存储异常到 Oracle 实例故障的图文案例 Demo](CASE_DEMO_STORAGE_INCIDENT.md)

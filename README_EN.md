@@ -54,7 +54,7 @@ dbsleuth redact incident.zip --preview
 
 Post-MVP research topics—not current product commitments—include an evidence-backed State Intelligence Engine, evidence graphs, constrained AI explanations, additional database parsers, optional Incident Bundle adapters, and possible online or enterprise components.
 
-TraceMind is only an [optional Post-MVP adapter proposal](docs/TRACEMIND_INTEGRATION.md); DBSleuth must remain independently useful. The [storage-to-Oracle walkthrough](docs/CASE_DEMO_STORAGE_INCIDENT.md) is a synthetic design case, not an implemented demo.
+The versioned [DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md) is an optional Post-MVP proposal, not a current runtime dependency. The [storage-to-Oracle walkthrough](docs/CASE_DEMO_STORAGE_INCIDENT.md) is a synthetic design case, not an implemented demo.
 
 ## Documentation
 
@@ -63,6 +63,8 @@ TraceMind is only an [optional Post-MVP adapter proposal](docs/TRACEMIND_INTEGRA
 - [Roadmap](ROADMAP.md)
 - [Initial backlog](BACKLOG.md)
 - [Post-MVP state engine draft](docs/STATE_ENGINE.md)
+- [Post-MVP DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md)
+- [Illustrated storage-to-Oracle case Demo](docs/CASE_DEMO_STORAGE_INCIDENT.md)
 
 ## License
 
