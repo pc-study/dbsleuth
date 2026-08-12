@@ -1,5 +1,7 @@
 # DBSleuth State Intelligence Engine 设计
 
+> 状态：Post-MVP 设计草案。实现必须建立在经过真实样本验证的统一事件与证据模型之上，不得阻塞当前 Oracle/Linux 离线解析 MVP。
+
 | 属性 | 内容 |
 |---|---|
 | 版本 | v0.1 Draft |

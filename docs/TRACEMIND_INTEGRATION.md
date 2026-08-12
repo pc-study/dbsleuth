@@ -1,4 +1,6 @@
-# TraceMind 与 DBSleuth 集成设计
+# TraceMind 与 DBSleuth 可选集成提案
+
+> 状态：Post-MVP 设计提案，不属于当前 MVP，也不是 DBSleuth 的运行依赖。DBSleuth 必须能够只使用本地 Oracle/Linux 日志独立完成分析。
 
 | 属性 | 内容 |
 |---|---|
