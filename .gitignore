@@ -1,0 +1,22 @@
+# Build output
+bin/
+dist/
+coverage/
+
+# Local and generated data
+*.log
+*.zip
+*.gz
+incident-report.*
+redacted-logs/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
