@@ -6,7 +6,7 @@
 
 - Language: Go
 - CLI: Cobra or standard `flag` package
-- Templates: Go `html/template` and `text/template`
+- Templates: Go `html/template` only for HTML output (NEVER use `text/template` to produce HTML — it does not context-auto-escape and is a known XSS root cause; `text/template` is permitted only for non-HTML, machine-readable output such as plain text/INI)
 - Internal interchange: versioned JSON schema
 - Packaging: GoReleaser
 - CI: GitHub Actions on Windows, Linux, and macOS
@@ -55,7 +55,7 @@ Input files/archive
   "entity_id": "db:orcl1",
   "system": "oracle",
   "component": "rdbms",
-  "severity": "high",
+  "severity": "high",  // values defined in docs/SEVERITY.md (critical/high/medium/low/info/unknown) — this file is the authoritative enum
   "category": "instance/storage",
   "codes": ["ORA-00240"],
   "summary": "Control file enqueue held for an extended period",
@@ -122,14 +122,21 @@ DBSleuth remains independently useful for local Oracle/Linux logs and never reco
 ## Safety requirements
 
 - Reject archive entries with absolute paths or path traversal.
-- Enforce configurable limits on expanded size, file count, nesting, and compression ratio.
+- Enforce configurable limits on expanded size, file count, nesting, and compression ratio. Defaults (override via config, but unsafe to raise):
+  - max expanded total size: **1 GiB**
+  - max single file size: **256 MiB**
+  - max file count: **10,000**
+  - max nesting depth: **10**
+  - max compression ratio: **100:1**
+  - On any limit hit: stop, emit a `PARTIAL` result with the reason, never silently continue.
 - Stream large files instead of reading bundles fully into memory.
 - Never modify the source bundle.
-- Escape all log content in HTML output.
-- Do not execute content found in logs.
+- Escape HTML output with `html/template` (auto context-escaping). ALL fields sourced from the input bundle must be escaped — not only "log content" but also `source.path`, `entity_id`, `hostname`, `summary`, `raw`, `codes`, `attributes`, and SQL `query_text`. These can contain quotes, angle brackets, or templates that break out of attribute/script/URL/CSS contexts. `text/template` MUST NOT be used to render HTML.
+- Do not execute content found in logs. This is enforced at code level, not just by declaration: (a) no `os/exec` / `subprocess` call path may consume content parsed from inputs; (b) SQL text is rendered as text/AST only and MUST NEVER be handed to `database/sql` or any driver for execution; (c) attachments are processed as read-only byte streams. A regression test must assert no execution path exists.
 - Mark guessed encodings and user-supplied timezones in the report.
 - Preserve unknown lines around detected events as evidence context.
-- Redact exported copies, not original inputs.
+- Redact exported copies, not original inputs. Define a **mandatory redaction set** (always redacted even if the user skips preview) and a **candidate set** (opt-in, user confirms). See [docs/REDACTION_POLICY.md](docs/REDACTION_POLICY.md).
+- After extracting an archive to disk, recompute SHA-256 for every extracted file and require exact match with the manifest; mismatch = task fails.
 
 ## Correlation boundary
 
