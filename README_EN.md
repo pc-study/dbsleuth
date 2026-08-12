@@ -9,6 +9,8 @@
 
 DBSleuth imports database and operating-system logs, normalizes timestamps, groups repeated messages, correlates related events, and produces an incident report in which every conclusion links back to original evidence.
 
+The planned State Intelligence Engine projects cited events into versioned state observations, transitions, and failure patterns. States compress the incident timeline but never replace the original evidence.
+
 ## Product promise
 
 Given an incident bundle, answer four questions:
@@ -48,6 +50,7 @@ Given an incident bundle, answer four questions:
 dbsleuth inspect incident.zip
 dbsleuth analyze incident.zip --timezone Asia/Shanghai
 dbsleuth events incident.zip --severity high
+dbsleuth states incident.zip --timezone Asia/Shanghai
 dbsleuth redact incident.zip --preview
 ```
 
@@ -64,7 +67,15 @@ Proceed beyond MVP only if a blinded evaluation over at least 30 anonymized real
 - at least 10 DBA users complete a report without maintainer assistance;
 - at least 5 users reuse the tool within 30 days.
 
-See [PROJECT_CHARTER.md](PROJECT_CHARTER.md), [ARCHITECTURE.md](ARCHITECTURE.md), [ROADMAP.md](ROADMAP.md), and [BACKLOG.md](BACKLOG.md).
+## Design documents
+
+- [Project charter](PROJECT_CHARTER.md)
+- [Architecture](ARCHITECTURE.md)
+- [Roadmap](ROADMAP.md)
+- [Backlog](BACKLOG.md)
+- [State Intelligence Engine](docs/STATE_ENGINE.md)
+- [TraceMind integration](docs/TRACEMIND_INTEGRATION.md)
+- [Illustrated storage-to-Oracle case Demo](docs/CASE_DEMO_STORAGE_INCIDENT.md)
 
 ## License
 

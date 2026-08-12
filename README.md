@@ -15,7 +15,7 @@
 [![Privacy](https://img.shields.io/badge/Privacy-Local--first-059669?style=flat-square)](#安全与隐私)
 [![Evidence](https://img.shields.io/badge/Analysis-Evidence--backed-7C3AED?style=flat-square)](#核心原则)
 
-[快速了解](#为什么需要-dbsleuth) · [工作方式](#工作方式) · [MVP](#mvp-范围) · [路线图](ROADMAP.md) · [English](README_EN.md)
+[快速了解](#为什么需要-dbsleuth) · [工作方式](#工作方式) · [案例 Demo](docs/CASE_DEMO_STORAGE_INCIDENT.md) · [MVP](#mvp-范围) · [路线图](ROADMAP.md) · [English](README_EN.md)
 
 </div>
 
@@ -56,7 +56,7 @@ INCIDENT  2026-08-12 01:42:13 +08:00 — 02:17:56 +08:00
 01:44:08  HIGH      ASM      Write latency exceeded 900 ms
 01:44:21  CRITICAL  Oracle   ORA-00240 detected
 01:45:04  CRITICAL  Oracle   Instance terminated
-01:45:18  MEDIUM    Network  Listener returned ORA-12514
+01:45:18  MEDIUM    Network  Listener returned TNS-12514
 02:02:16  INFO      Oracle   Database opened successfully
 
 OBSERVATION
@@ -75,6 +75,7 @@ CONFIDENCE  0.93 · temporal correlation, not a root-cause claim
 ```text
 incident-report.html     可交付的自包含故障报告
 timeline.json            版本化结构事件数据
+state-timeline.json      状态观察与状态转换
 evidence-index.json      结论与原始证据映射
 redacted-logs.zip        用户确认后生成的脱敏日志包
 ```
@@ -88,6 +89,7 @@ redacted-logs.zip        用户确认后生成的脱敏日志包
 | 多行事件 | 重建堆栈、ORA 错误及跨行上下文 |
 | 重复噪声 | 按指纹聚合，同时保留次数和时间范围 |
 | 跨层关联 | 展示数据库事件前后的系统事件与时间距离 |
+| 状态智能 | 将带证据的事件归纳为状态、转换和故障模式 |
 | 证据追踪 | 每个事件记录来源文件、行号和解析器版本 |
 | 脱敏分享 | 先预览候选项，再生成脱敏副本 |
 | 离线交付 | 输出 HTML、Markdown 与 JSON，不依赖云服务 |
@@ -101,12 +103,27 @@ flowchart LR
     C --> D["统一事件模型"]
     D --> E["时间与时区标准化"]
     E --> F["分类、聚合与时间关联"]
-    F --> G["脱敏候选扫描"]
-    G --> H["证据索引"]
-    H --> I["HTML / Markdown / JSON"]
+    F --> G["状态识别与状态转换"]
+    G --> H["故障模式与反证检查"]
+    H --> I["证据索引"]
+    I --> J["脱敏候选扫描"]
+    J --> K["HTML / Markdown / JSON"]
 ```
 
-DBSleuth 的分析流水线以确定性解析和规则为基础。未来即使增加本地 AI 解释，它也只能处理已经结构化、带引用的事件，不能替代原始证据。
+DBSleuth 的分析流水线以确定性解析和规则为基础。计划中的状态智能层用于压缩和复用系统运行状态，但每个状态仍必须引用标准事件，每个标准事件仍必须回到原始证据。未来即使增加本地 AI 解释，它也只能处理已经结构化、带引用的事实，不能替代原始证据。
+
+### 计划中的状态智能层
+
+```text
+Canonical Event
+  -> State Observation
+  -> State Transition
+  -> Failure Pattern
+  -> Evidence Graph
+  -> Root-cause Candidate
+```
+
+状态长期保存，关键指标保留事故窗口，原始日志和附件按需归档。缺失数据必须标记为 `unknown`，不能被解释为正常；时间相关性必须与已确认因果区分。完整设计见 [状态智能引擎](docs/STATE_ENGINE.md)，图文过程见 [存储异常案例 Demo](docs/CASE_DEMO_STORAGE_INCIDENT.md)。
 
 ## 计划中的命令行
 
@@ -119,6 +136,9 @@ dbsleuth analyze incident.zip --timezone Asia/Shanghai
 
 # 筛选高严重度事件
 dbsleuth events incident.zip --severity high
+
+# 生成状态时间线和状态转换（规划中）
+dbsleuth states incident.zip --timezone Asia/Shanghai
 
 # 预览潜在敏感信息，不修改原文件
 dbsleuth redact incident.zip --preview
@@ -136,6 +156,7 @@ dbsleuth redact incident.zip --preview
 - 多行事件重建
 - ORA 错误及关键 Linux 系统事件识别
 - 确定性严重度分类与重复事件聚合
+- 受版本控制、可回溯的状态识别与状态时间线
 - 来源文件与行号范围证据索引
 - HTML、Markdown 与 JSON 报告
 - 本地脱敏候选预览
@@ -183,16 +204,18 @@ MVP 将使用至少 30 份匿名化真实日志包进行盲测。进入下一阶
 | 严重/高风险事件分类准确率 | ≥ 90% |
 | 虚构事件或错误证据位置 | 0 |
 | 事件到原始文本的可追溯率 | 100% |
+| 状态到标准事件及原始证据的可追溯率 | 100% |
+| 关键状态识别准确率 | ≥ 90% |
 | 无协助完成报告的 DBA | ≥ 10 人 |
 | 30 天内重复使用者 | ≥ 5 人 |
 
 ## 项目路线
 
 ```text
-Phase 0  匿名样本库与统一事件模型
+Phase 0  匿名样本库与统一事件、状态模型
 Phase 1  Oracle + Linux 流式解析器
-Phase 2  聚合、关联、证据报告与脱敏预览
-Phase 3  真实故障包验证与跨平台发行
+Phase 2  聚合、状态转换、故障模式、证据报告与脱敏预览
+Phase 3  TraceMind Incident Bundle、真实故障包验证与跨平台发行
 ```
 
 完整计划见 [ROADMAP.md](ROADMAP.md)。
@@ -205,6 +228,9 @@ Phase 3  真实故障包验证与跨平台发行
 | [ARCHITECTURE.md](ARCHITECTURE.md) | MVP 架构、事件模型和安全边界 |
 | [ROADMAP.md](ROADMAP.md) | 12 周分阶段路线图 |
 | [BACKLOG.md](BACKLOG.md) | 首批 Epic 与 GitHub Issue 建议 |
+| [docs/STATE_ENGINE.md](docs/STATE_ENGINE.md) | 状态编码、状态转换、故障模式与质量约束 |
+| [docs/TRACEMIND_INTEGRATION.md](docs/TRACEMIND_INTEGRATION.md) | TraceMind Incident Bundle 集成边界 |
+| [docs/CASE_DEMO_STORAGE_INCIDENT.md](docs/CASE_DEMO_STORAGE_INCIDENT.md) | 存储异常到 Oracle 故障的端到端图文 Demo |
 | [README_EN.md](README_EN.md) | English overview |
 
 ## 参与贡献

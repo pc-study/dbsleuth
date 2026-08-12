@@ -61,6 +61,30 @@
 - [ ] Write bilingual quick start.
 - [ ] Publish v0.1.0 release and sample report.
 
+## Epic G — State Intelligence Engine
+
+- [ ] Publish the versioned state dictionary and lifecycle policy.
+- [ ] Define state observation, transition, reason, and pattern schemas.
+- [ ] Require every state to reference canonical event evidence.
+- [ ] Implement `unknown`, inferred-baseline, and data-quality semantics.
+- [ ] Add enter/exit hysteresis, duration thresholds, cooldowns, and deduplication.
+- [ ] Implement deterministic state replay and idempotent identifiers.
+- [ ] Add host, memory, storage, database, and application MVP states.
+- [ ] Implement storage-to-database and database-to-application patterns.
+- [ ] Preserve supporting evidence, contradictions, topology checks, and limitations.
+- [ ] Add golden tests for out-of-order, duplicate, missing, and flapping inputs.
+
+## Epic H — TraceMind integration
+
+- [ ] Publish the sanitized Incident Bundle manifest and compatibility rules.
+- [ ] Import versioned timeline, alert, metric-window, topology, and state records.
+- [ ] Validate upstream state codes, rule versions, evidence references, and hashes.
+- [ ] Preserve conflicts between upstream and locally derived states.
+- [ ] Represent SQL evidence with query text, execution status, fields, row count, and result digest.
+- [ ] Reject credentials, tokens, private keys, cookies, and application databases.
+- [ ] Add import diagnostics for unsupported fields, states, and attachments.
+- [ ] Build the storage-to-Oracle illustrated Demo as an executable golden fixture.
+
 ## First five implementation issues
 
 1. `spec: define canonical event and evidence schema`
@@ -68,3 +92,9 @@
 3. `parser: parse Oracle alert timestamps and multi-line records`
 4. `parser: parse Linux syslog/messages records`
 5. `report: render JSON and evidence-indexed Markdown`
+
+## Design documents
+
+- [State Intelligence Engine](docs/STATE_ENGINE.md)
+- [TraceMind integration](docs/TRACEMIND_INTEGRATION.md)
+- [Storage-to-Oracle case Demo](docs/CASE_DEMO_STORAGE_INCIDENT.md)
