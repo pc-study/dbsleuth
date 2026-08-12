@@ -61,7 +61,7 @@
 - [ ] Write bilingual quick start.
 - [ ] Publish v0.1.0 release and sample report.
 
-## Epic G — State Intelligence Engine
+## Post-MVP Epic G — State Intelligence Engine
 
 - [ ] Publish the versioned state dictionary and lifecycle policy.
 - [ ] Define state observation, transition, reason, and pattern schemas.
@@ -74,7 +74,7 @@
 - [ ] Preserve supporting evidence, contradictions, topology checks, and limitations.
 - [ ] Add golden tests for out-of-order, duplicate, missing, and flapping inputs.
 
-## Epic H — DBSleuth Incident Bundle
+## Post-MVP Epic H — Optional DBSleuth Incident Bundle
 
 - [ ] Publish the sanitized Incident Bundle manifest and compatibility rules.
 - [ ] Import versioned timeline, alert, metric-window, topology, and state records.

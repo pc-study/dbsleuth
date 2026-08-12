@@ -1,4 +1,4 @@
-# MVP and State Intelligence Architecture
+# MVP Architecture and Post-MVP Proposals
 
 > Status: design proposal. DBSleuth is still in feasibility validation; the pipeline and repository paths below describe the target architecture, not released functionality.
 
@@ -67,7 +67,9 @@ Input files/archive
 }
 ```
 
-## Planned state intelligence layer
+## Post-MVP state intelligence proposal
+
+This layer is not part of the current Oracle/Linux parsing MVP. It may be implemented only after the canonical event and evidence model is validated against real anonymized fixtures.
 
 The state layer is a deterministic, replayable projection over canonical events. It reduces long-term analysis volume without replacing the evidence from which it was derived.
 
@@ -109,7 +111,9 @@ On Linux, eBPF is the preferred L0.5 kernel observation path between the Agent s
 
 Production probes must be signed and allowlisted, scoped to explicit targets, governed by resource budgets and TTL leases, and protected by a Kill Switch. Sequence gaps, Ring Buffer overflow, lost events, symbol quality, and fallback mode are evidence-quality fields; absence of events must never imply health. Unsupported kernels fall back to perf/ftrace/procfs/netlink without preventing the base Agent from starting. Windows uses ETW/WCT/WFP/Performance Counter as its primary equivalent path. See [docs/EBPF_OBSERVABILITY.md](docs/EBPF_OBSERVABILITY.md).
 
-## DBSleuth Incident Bundle adapter
+## Optional Post-MVP DBSleuth Incident Bundle adapter
+
+This adapter is not a runtime dependency and is not part of the current MVP.
 
 The Incident Bundle adapter accepts sanitized, versioned events, metric windows, state observations, topology, AWR/APM evidence, thread and memory snapshots, change records, and selected attachments produced by DBSleuth collectors or offline import tools. It must not import control-plane credentials, database connection settings, private keys, or the DBSleuth metadata database.
 
