@@ -1,4 +1,4 @@
-# MVP and State Intelligence Architecture
+# MVP Architecture and Post-MVP Proposals
 
 > Status: design proposal. DBSleuth is still in feasibility validation; the pipeline and repository paths below describe the target architecture, not released functionality.
 
@@ -67,7 +67,9 @@ Input files/archive
 }
 ```
 
-## Planned state intelligence layer
+## Post-MVP state intelligence proposal
+
+This layer is not part of the current Oracle/Linux parsing MVP. It may be implemented only after the canonical event and evidence model is validated against real anonymized fixtures.
 
 The state layer is a deterministic, replayable projection over canonical events. It reduces long-term analysis volume without replacing the evidence from which it was derived.
 
@@ -103,7 +105,9 @@ State codes are partitioned by entity domain: `1xxx` host, `2xxx` process, `3xxx
 
 Formal reports must be navigable from Level 1 to Level 2 and then to the immutable Level 3 source evidence.
 
-## DBSleuth Incident Bundle adapter
+## Optional Post-MVP DBSleuth Incident Bundle adapter
+
+This adapter is not a runtime dependency and is not part of the current MVP.
 
 The Incident Bundle adapter accepts sanitized, versioned events, metric windows, state observations, topology, AWR/APM evidence, thread and memory snapshots, change records, and selected attachments produced by DBSleuth collectors or offline import tools. It must not import control-plane credentials, database connection settings, private keys, or the DBSleuth metadata database.
 

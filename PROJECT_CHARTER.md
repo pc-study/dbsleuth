@@ -21,7 +21,7 @@ Secondary users:
 
 ## 3. Value proposition
 
-DBSleuth turns a folder or archive of Oracle and Linux logs into a chronological, deduplicated incident report. Its planned state intelligence layer compresses cited events into replayable state observations, transitions, and failure patterns. It runs locally, requires no credentials, and never presents a conclusion without traceable source evidence.
+DBSleuth turns a folder or archive of Oracle and Linux logs into a chronological, deduplicated incident report. It runs locally, requires no credentials, and never presents a conclusion without traceable source evidence. A state intelligence layer may be explored after the event and evidence model is validated in the field.
 
 ## 4. Principles
 
@@ -44,7 +44,7 @@ Collect/export logs
 -> dbsleuth inspect
     -> correct timezone/source hints if required
 -> dbsleuth analyze
-    -> review events, state transitions, evidence, and redaction candidates
+    -> review events, evidence, and redaction candidates
     -> export/share report and sanitized bundle
 ```
 
@@ -59,8 +59,6 @@ Collect/export logs
 - Severity and category rule engine.
 - Duplicate-event grouping.
 - Cross-source temporal context windows.
-- Versioned state dictionary and deterministic state timeline for supported conditions.
-- Evidence-backed state transitions and initial failure-pattern candidates.
 - Evidence-backed Markdown, HTML, and JSON reports.
 - Redaction candidate detector with preview.
 - An anonymized fixture corpus and regression tests.
@@ -85,8 +83,6 @@ DBSleuth is not a replacement for Loki, Elasticsearch, Splunk, lnav, OEM, or dat
 - Timestamp extraction accuracy.
 - Event classification precision and recall.
 - Evidence-link correctness.
-- State-recognition precision and state-to-evidence traceability.
-- Failure-pattern precision, including contradiction handling.
 - Report completion time for a 100 MB bundle.
 - Peak memory consumption.
 - First successful report rate.

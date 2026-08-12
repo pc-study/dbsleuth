@@ -1,80 +1,69 @@
 # DBSleuth
 
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-project%20initiation-orange.svg)](ROADMAP.md)
-
 [简体中文](README.md) | [English](README_EN.md)
 
-> Evidence-driven database incident analysis.
+> Local-first, evidence-driven database incident analysis CLI.
 
-DBSleuth imports database and operating-system logs, normalizes timestamps, groups repeated messages, correlates related events, and produces an incident report in which every conclusion links back to original evidence.
+DBSleuth aims to import Oracle and Linux logs, reconstruct incident timelines, group repeated events, correlate cross-layer signals, and link every observation to exact source evidence.
 
-The planned State Intelligence Engine projects cited events into versioned state observations, transitions, and failure patterns. States compress the incident timeline but never replace the original evidence.
+> **Status:** initiation and feasibility validation. No usable release exists yet. Commands shown in the documentation describe the intended experience.
 
-## Product promise
+## Current MVP
 
-Given an incident bundle, answer four questions:
+Planned scope:
 
-1. What important events occurred?
-2. What was the earliest abnormal event?
-3. What happened at the operating-system layer around the database failure?
-4. Which source file and line support every conclusion?
+- Oracle `alert.log`;
+- Linux syslog/messages and exported `journalctl` text;
+- UTF-8 and GBK input;
+- `.log`, `.txt`, `.gz`, and `.zip`;
+- timestamp normalization and multi-line event reconstruction;
+- deterministic classification and duplicate grouping;
+- exact source-span evidence links;
+- local HTML, Markdown, and JSON reports;
+- redaction candidate preview.
 
-## MVP scope
+Explicitly outside the MVP:
 
-- Oracle `alert.log`
-- Linux syslog/messages and exported `journalctl` text
-- UTF-8 and GBK input
-- `.log`, `.txt`, `.gz`, and `.zip`
-- Timestamp normalization and explicit timezone handling
-- Multi-line event reconstruction
-- Deterministic event classification and duplicate grouping
-- Evidence index with source file and line range
-- HTML, Markdown, and JSON output
-- Local-only redaction preview
+- resident agents, live collection, and dynamic probes;
+- credentials or direct production database connections;
+- trace, dump, memory, or thread-snapshot collection;
+- long-term storage, alerting, notification, or remediation;
+- multi-tenancy, control planes, HA, and disaster recovery;
+- unsupported AI root-cause claims;
+- additional databases and operating systems.
 
-## Explicitly out of scope for v0.1
-
-- Live collection or agents
-- Database credentials or direct database connections
-- Long-term log storage
-- Alerting and notification
-- Automatic remediation
-- Generic observability platform features
-- Untraceable AI root-cause claims
-- MySQL, PostgreSQL, Windows, ASM, CRS, and Listener logs
-
-## Proposed CLI
+## Intended CLI
 
 ```bash
 dbsleuth inspect incident.zip
 dbsleuth analyze incident.zip --timezone Asia/Shanghai
 dbsleuth events incident.zip --severity high
-dbsleuth states incident.zip --timezone Asia/Shanghai
 dbsleuth redact incident.zip --preview
 ```
 
-> The project is currently in its initiation and feasibility-validation phase. These commands have not been released yet.
+## Evidence contract
 
-## Success gate
+- deterministic parsing precedes probabilistic inference;
+- missing facts and causal links are never fabricated;
+- temporal proximity is correlation, not causation;
+- unsupported input is reported as unknown;
+- rules require anonymized fixtures and regression tests;
+- events retain source spans, parser versions, and rule versions.
 
-Proceed beyond MVP only if a blinded evaluation over at least 30 anonymized real-world bundles achieves:
+## Long-term vision
 
-- at least 95% timestamp extraction on supported log lines;
-- at least 90% precision for critical/high event classification;
-- no fabricated events or evidence locations;
-- every reported event links to an exact source span;
-- at least 10 DBA users complete a report without maintainer assistance;
-- at least 5 users reuse the tool within 30 days.
+Post-MVP research topics—not current product commitments—include an evidence-backed State Intelligence Engine, evidence graphs, constrained AI explanations, additional database parsers, optional Incident Bundle adapters, and possible online or enterprise components.
 
-## Design documents
+The versioned [DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md) is an optional Post-MVP proposal, not a current runtime dependency. The [storage-to-Oracle walkthrough](docs/CASE_DEMO_STORAGE_INCIDENT.md) is a synthetic design case, not an implemented demo.
+
+## Documentation
 
 - [Project charter](PROJECT_CHARTER.md)
 - [Architecture](ARCHITECTURE.md)
 - [Roadmap](ROADMAP.md)
-- [Backlog](BACKLOG.md)
-- [State Intelligence Engine](docs/STATE_ENGINE.md)
-- [DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md)
+- [Initial backlog](BACKLOG.md)
+- [Post-MVP state engine draft](docs/STATE_ENGINE.md)
+- [Post-MVP DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md)
 - [Illustrated storage-to-Oracle case Demo](docs/CASE_DEMO_STORAGE_INCIDENT.md)
 
 ## License
