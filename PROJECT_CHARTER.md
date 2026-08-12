@@ -21,7 +21,7 @@ Secondary users:
 
 ## 3. Value proposition
 
-DBSleuth turns a folder or archive of Oracle and Linux logs into a chronological, deduplicated incident report. It runs locally, requires no credentials, and never presents a conclusion without traceable source evidence.
+DBSleuth turns a folder or archive of Oracle and Linux logs into a chronological, deduplicated incident report. Its planned state intelligence layer compresses cited events into replayable state observations, transitions, and failure patterns. It runs locally, requires no credentials, and never presents a conclusion without traceable source evidence.
 
 ## 4. Principles
 
@@ -33,6 +33,8 @@ DBSleuth turns a folder or archive of Oracle and Linux logs into a chronological
 6. Redaction must be previewable and reversible against preserved originals.
 7. Unsupported input is reported explicitly, not silently misparsed.
 8. A correlation is not presented as causation.
+9. A state is a versioned projection of evidence, not a replacement for evidence.
+10. Missing data is unknown, not healthy.
 
 ## 5. Core user journey
 
@@ -42,7 +44,7 @@ Collect/export logs
 -> dbsleuth inspect
     -> correct timezone/source hints if required
 -> dbsleuth analyze
-    -> review evidence and redaction candidates
+    -> review events, state transitions, evidence, and redaction candidates
     -> export/share report and sanitized bundle
 ```
 
@@ -57,6 +59,8 @@ Collect/export logs
 - Severity and category rule engine.
 - Duplicate-event grouping.
 - Cross-source temporal context windows.
+- Versioned state dictionary and deterministic state timeline for supported conditions.
+- Evidence-backed state transitions and initial failure-pattern candidates.
 - Evidence-backed Markdown, HTML, and JSON reports.
 - Redaction candidate detector with preview.
 - An anonymized fixture corpus and regression tests.
@@ -64,7 +68,7 @@ Collect/export logs
 
 ## 7. Non-goals
 
-DBSleuth is not a replacement for Loki, Elasticsearch, Splunk, lnav, OEM, or database monitoring. It does not collect live telemetry, execute SQL, manage credentials, or repair production systems.
+DBSleuth is not a replacement for Loki, Elasticsearch, Splunk, lnav, OEM, or database monitoring. It does not collect live telemetry, execute SQL, manage credentials, or repair production systems. AI output without valid evidence references is not accepted as a confirmed root cause.
 
 ## 8. Proposed license and governance
 
@@ -81,6 +85,8 @@ DBSleuth is not a replacement for Loki, Elasticsearch, Splunk, lnav, OEM, or dat
 - Timestamp extraction accuracy.
 - Event classification precision and recall.
 - Evidence-link correctness.
+- State-recognition precision and state-to-evidence traceability.
+- Failure-pattern precision, including contradiction handling.
 - Report completion time for a 100 MB bundle.
 - Peak memory consumption.
 - First successful report rate.
