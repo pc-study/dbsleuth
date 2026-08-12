@@ -103,11 +103,11 @@ State codes are partitioned by entity domain: `1xxx` host, `2xxx` process, `3xxx
 
 Formal reports must be navigable from Level 1 to Level 2 and then to the immutable Level 3 source evidence.
 
-## TraceMind Incident Bundle adapter
+## DBSleuth Incident Bundle adapter
 
-TraceMind integration is an optional planned input adapter. It accepts sanitized, versioned events, metric windows, state observations, topology, AWR/APM evidence, and selected attachments. It must not import platform credentials, database connection settings, private keys, or TraceMind's application database.
+The Incident Bundle adapter accepts sanitized, versioned events, metric windows, state observations, topology, AWR/APM evidence, thread and memory snapshots, change records, and selected attachments produced by DBSleuth collectors or offline import tools. It must not import control-plane credentials, database connection settings, private keys, or the DBSleuth metadata database.
 
-DBSleuth remains independently useful for local Oracle/Linux logs and never reconnects to addresses found in an exported bundle. The interface and security boundary are defined in [docs/TRACEMIND_INTEGRATION.md](docs/TRACEMIND_INTEGRATION.md).
+DBSleuth remains independently useful for local Oracle/Linux logs and never reconnects to addresses found in an imported bundle by default. The format, compatibility rules, and security boundary are defined in [docs/DBSLEUTH_INCIDENT_BUNDLE.md](docs/DBSLEUTH_INCIDENT_BUNDLE.md).
 
 ## Safety requirements
 

@@ -431,6 +431,8 @@ Phase 5  受约束 AI、企业高可用、多租户、审计与灾备
 | [ROADMAP.md](ROADMAP.md) | 分阶段实现路线 |
 | [BACKLOG.md](BACKLOG.md) | 首批 Epic 与工程任务建议 |
 | [docs/STATE_ENGINE.md](docs/STATE_ENGINE.md) | 状态编码、状态转换、故障模式与质量约束 |
+| [docs/DBSLEUTH_INCIDENT_BUNDLE.md](docs/DBSLEUTH_INCIDENT_BUNDLE.md) | Agent、Collector 与分析引擎之间的事故数据契约 |
+| [docs/CASE_DEMO_STORAGE_INCIDENT.md](docs/CASE_DEMO_STORAGE_INCIDENT.md) | 从存储异常到 Oracle 故障的端到端图文案例 |
 | [README_EN.md](README_EN.md) | English overview |
 
 ## 参与贡献

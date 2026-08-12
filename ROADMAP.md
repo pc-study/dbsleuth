@@ -6,7 +6,7 @@ Objective: prove that representative logs can be parsed safely and consistently.
 
 - Define event schema and evidence model.
 - Freeze the initial state dictionary, observation/transition schema, and evidence invariants.
-- Define the sanitized TraceMind Incident Bundle contract without platform credentials.
+- Define the sanitized DBSleuth Incident Bundle contract without control-plane or database credentials.
 - Collect at least 30 anonymized samples across Oracle 11g, 12c, 19c, and 21c where available.
 - Include Linux syslog/messages and journalctl exports.
 - Document anonymization procedure and prohibited data.
@@ -51,7 +51,7 @@ Exit gate: 10 DBA testers can produce and understand a report without maintainer
 - Add performance benchmarks for 100 MB and 1 GB inputs.
 - Publish example bundles and reports.
 - Validate the illustrated storage-to-Oracle Demo against golden fixtures.
-- Validate sanitized TraceMind Incident Bundle import and version diagnostics.
+- Validate sanitized DBSleuth Incident Bundle import and version diagnostics.
 - Add contribution guide for parsers, rules, and fixtures.
 - Package via GitHub Releases, Homebrew, Scoop, and container image where useful.
 
