@@ -64,3 +64,6 @@ Prioritize only from real issue demand:
 8. Optional lnav format contributions/integration.
 9. Optional local LLM explanation over already-structured, cited events.
 10. Evidence-backed state intelligence and optional Incident Bundle adapters.
+11. Linux eBPF capability probe, signed privileged loader, and sensor health telemetry.
+12. Scheduler/Off-CPU, Block IO, TCP/Socket, memory-pressure, and process-lifecycle sensors.
+13. Offline symbol service and targeted eBPF-to-Snapshot/Dump orchestration.

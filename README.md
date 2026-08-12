@@ -109,7 +109,7 @@ flowchart LR
 
 ### 明确不在 MVP 中
 
-- 常驻 Agent、实时采集或动态探针
+- 常驻 Agent、实时采集、eBPF 或动态探针
 - 数据库凭据管理或直接连接生产数据库
 - Trace、Dump、内存与线程快照采集
 - 长期存储、告警、通知或自动修复
@@ -145,10 +145,13 @@ flowchart LR
 以下方向与项目主题相关，但均属于 **Post-MVP 研究或规划**，不构成当前产品承诺：
 
 - **State Intelligence Engine**：将带证据的事件投影为可重放状态、转换和故障模式；详见 [设计草案](docs/STATE_ENGINE.md)。
+- **eBPF 内核动态观测层**：以 Linux eBPF 捕获调度、进程、Block IO、TCP/Socket、内存和锁的短时变化，定位目标后触发增量 Snapshot；不支持的内核必须自动降级，事件丢失必须作为证据缺口。详见 [生产设计](docs/EBPF_OBSERVABILITY.md)。
 - **证据图与受约束 AI**：仅解释已结构化、带引用的事实，不创建确定性事实。
 - **更多数据库与操作系统**：根据真实 Issue 需求逐步扩展。
 - **可选生态适配器**：版本化的 [DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md) 属于 Post-MVP 提案，不是当前运行依赖。
 - **在线采集与企业部署**：只在离线 CLI 获得真实验证后评估，并可能拆分成独立项目。
+
+eBPF 不是 Dump 的替代品：它负责发现异常发生的过程和目标对象，Snapshot 与 Dump 负责保存现场，状态机负责压缩演化，证据图负责连接跨层关系。所有高强度探针都必须使用签名白名单、目标范围、资源预算、TTL、Ring Buffer 丢失统计和 Kill Switch。
 
 [存储异常到 Oracle 故障案例](docs/CASE_DEMO_STORAGE_INCIDENT.md) 是验证事件、证据和状态模型的**合成案例**，不是已实现的产品演示。
 
@@ -161,6 +164,7 @@ flowchart LR
 | Oracle/Linux 解析器 | 未实现 |
 | 报告生成 | 未实现 |
 | 状态智能引擎 | Post-MVP 设计草案 |
+| eBPF 内核动态观测 | Post-MVP 生产设计 |
 | DBSleuth Incident Bundle | Post-MVP 可选提案 |
 | AI 调查助手 | 长期研究方向 |
 
@@ -175,6 +179,8 @@ flowchart LR
 | 无协助完成报告的 DBA | ≥ 10 人 |
 | 30 天内重复使用者 | ≥ 5 人 |
 
+eBPF 进入 Post-MVP 生产实现前，还必须满足：不支持的内核自动降级、基础 Agent 不受加载失败影响、所有探针带预算/TTL/Kill Switch、事件序列与 Ring Buffer 丢失 100% 可观测、只加载签名白名单对象。
+
 ## 项目文档
 
 | 文档 | 内容 |
@@ -184,6 +190,7 @@ flowchart LR
 | [ROADMAP.md](ROADMAP.md) | 分阶段实现路线 |
 | [BACKLOG.md](BACKLOG.md) | 首批 Epic 与工程任务 |
 | [docs/STATE_ENGINE.md](docs/STATE_ENGINE.md) | Post-MVP 状态智能设计草案 |
+| [docs/EBPF_OBSERVABILITY.md](docs/EBPF_OBSERVABILITY.md) | Post-MVP eBPF 传感器、安全、降级和 Snapshot 联动设计 |
 | [docs/DBSLEUTH_INCIDENT_BUNDLE.md](docs/DBSLEUTH_INCIDENT_BUNDLE.md) | Post-MVP 事故数据契约提案 |
 | [docs/CASE_DEMO_STORAGE_INCIDENT.md](docs/CASE_DEMO_STORAGE_INCIDENT.md) | 合成的存储到 Oracle 故障案例 |
 | [README_EN.md](README_EN.md) | English overview |

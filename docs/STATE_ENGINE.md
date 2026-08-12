@@ -181,6 +181,7 @@ AI 可以归纳状态链、解释术语和生成排查建议，但不能新增�
 
 - Oracle、Linux 和后续数据库/中间件日志中的确定性事件；
 - DBSleuth Incident Snapshot 的标准事件；
+- eBPF 调度、Block IO、TCP/Socket、内存压力、进程生命周期和锁等待标准事件；
 - 指标窗口计算得到的阈值、持续时长、变化率和基线偏离；
 - AWR、等待事件、Zabbix、Prometheus、APM 和操作系统证据；
 - 已验证的上游 `state_code`。
@@ -333,12 +334,14 @@ redaction-candidates.json
 1. 冻结状态字典、Schema 和实体身份规则。
 2. 基于 Oracle Alert 与 Linux 日志实现确定性状态识别。
 3. 接入 DBSleuth Snapshot 标准事件和显式状态码。
-4. 实现状态去重、转换、防抖和时间质量处理。
-5. 实现首批四类故障模式和反证模型。
-6. 接入报告、证据图谱与 AI 受约束解释。
-7. 使用匿名化真实事故包盲测，达到质量门槛后再扩展数据库和中间件状态。
+4. 接入 eBPF 事件序列、双时钟、关联锚点、丢失统计和采集质量。
+5. 实现状态去重、转换、防抖和时间质量处理。
+6. 实现首批四类故障模式和反证模型。
+7. 接入报告、证据图谱与 AI 受约束解释。
+8. 使用匿名化真实事故包盲测，达到质量门槛后再扩展数据库和中间件状态。
 
 ## 13. 配套文档
 
 - [DBSleuth Incident Bundle 设计](DBSLEUTH_INCIDENT_BUNDLE.md)
+- [DBSleuth eBPF 内核动态观测设计](EBPF_OBSERVABILITY.md)
 - [从存储异常到 Oracle 实例故障的图文案例 Demo](CASE_DEMO_STORAGE_INCIDENT.md)

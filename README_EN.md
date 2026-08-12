@@ -26,7 +26,7 @@ Explicitly outside the MVP:
 
 - resident agents, live collection, and dynamic probes;
 - credentials or direct production database connections;
-- trace, dump, memory, or thread-snapshot collection;
+- trace, dump, memory, thread-snapshot, or eBPF collection;
 - long-term storage, alerting, notification, or remediation;
 - multi-tenancy, control planes, HA, and disaster recovery;
 - unsupported AI root-cause claims;
@@ -54,6 +54,8 @@ dbsleuth redact incident.zip --preview
 
 Post-MVP research topics—not current product commitments—include an evidence-backed State Intelligence Engine, evidence graphs, constrained AI explanations, additional database parsers, optional Incident Bundle adapters, and possible online or enterprise components.
 
+The planned Linux eBPF observation layer is a Post-MVP production design. It uses bounded scheduler, process, Block IO, TCP/socket, memory-pressure, and lock events to identify affected entities and trigger targeted snapshots. Unsupported kernels must fall back safely, and event loss must be reported as incomplete evidence rather than interpreted as health.
+
 The versioned [DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md) is an optional Post-MVP proposal, not a current runtime dependency. The [storage-to-Oracle walkthrough](docs/CASE_DEMO_STORAGE_INCIDENT.md) is a synthetic design case, not an implemented demo.
 
 ## Documentation
@@ -64,6 +66,7 @@ The versioned [DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md) is an
 - [Initial backlog](BACKLOG.md)
 - [Post-MVP state engine draft](docs/STATE_ENGINE.md)
 - [Post-MVP DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md)
+- [Post-MVP eBPF kernel observability](docs/EBPF_OBSERVABILITY.md)
 - [Illustrated storage-to-Oracle case Demo](docs/CASE_DEMO_STORAGE_INCIDENT.md)
 
 ## License
