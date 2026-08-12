@@ -60,6 +60,7 @@ DBSleuth
 | 能力 | DBSleuth 的设计 |
 |---|---|
 | 持续黑匣子 | 低开销保存状态、关键指标和事件环形缓冲区 |
+| eBPF 内核观测 | 捕获调度、IO、TCP、内存和进程的毫秒级状态变化 |
 | 事故快照 | 按策略冻结故障前后窗口，生成不可变 Snapshot |
 | 内存快照 | 从内存摘要、对象分布到受审批的完整 Dump 分级采集 |
 | 线程追踪 | 连续采样线程状态、调用栈、锁、IO、网络和数据库等待 |
@@ -80,6 +81,7 @@ DBSleuth
 flowchart LR
     A["指标与日志"] --> G["统一时间轴"]
     B["进程与线程"] --> G
+    N["eBPF 内核事件"] --> G
     C["内存与 Dump"] --> G
     D["网络与 Socket"] --> G
     E["数据库会话与 SQL"] --> G
@@ -160,6 +162,7 @@ incident-bundle/
 ├── manifest.json              # 版本、时间窗、哈希、完整度和数据等级
 ├── timeline/                  # 标准事件、状态观察与状态转换
 ├── host/                      # CPU、内存、磁盘、网络和内核证据
+├── kernel/                    # eBPF 事件、聚合、栈、丢失统计和能力矩阵
 ├── process/                   # 进程树、资源、文件句柄和 Socket
 ├── threads/                   # 连续线程轨迹、调用栈和锁关系
 ├── memory/                    # 内存摘要、直方图与授权后的 Dump
@@ -182,6 +185,7 @@ flowchart TB
         DA["Database Collector"]
         AA["Application Probe"]
         WD["Independent Watchdog"]
+        EBPF["eBPF Kernel Sensors"]
     end
 
     subgraph CP["Control Plane"]
@@ -210,6 +214,7 @@ flowchart TB
     end
 
     AP -->|"outbound mTLS stream"| GW
+    EBPF --> LA
     WD --> AP
     GW --> BUS
     BUS --> IM
@@ -251,6 +256,12 @@ flowchart TB
 - CPU、内存、磁盘、采样频率和上传带宽均有硬预算；
 - 配置版本化，失败自动回滚到最近有效版本；
 - 最小权限运行，高权限采集器按任务、目标和有效期临时授权。
+
+### eBPF 内核动态观测层
+
+Linux 以 eBPF + libbpf CO-RE 作为内核动态观测主路径，覆盖调度与线程、进程生命周期、Block IO、TCP/Socket、内存压力、Futex/锁和受控用户态探针。不支持 eBPF 时自动降级到 perf、ftrace、procfs 或 netlink；Windows 使用 ETW、WCT、WFP 和 Performance Counter 提供等价事件，不强行照搬 Linux 实现。
+
+eBPF 采用 E0 常态、E1 可疑、E2 故障、E3 取证、E4 灾难五级采集状态机。高强度探针只能作用于指定 PID、cgroup、设备或端口，并强制资源预算、签名白名单、TTL、Ring Buffer 丢失统计和 Kill Switch。eBPF 负责发现目标，Snapshot 与 Dump 保存现场，状态机压缩演化过程。完整设计见 [docs/EBPF_OBSERVABILITY.md](docs/EBPF_OBSERVABILITY.md)。
 
 ## 调查流水线
 
@@ -390,6 +401,7 @@ dbsleuth redact incident.zip --preview
 | State Intelligence Engine | 设计草案 | 已定义编码、转换和证据约束 |
 | Snapshot 与现场重建 | 架构设计 | 待冻结格式、协议和资源预算 |
 | Agent、线程、内存与动态探针 | 规划中 | 必须先完成生产安全验证 |
+| eBPF 内核动态观测 | 架构设计 | 待实现能力探测、特权加载器和核心传感器 |
 | Evidence Graph 与 RCA | 规划中 | 依赖稳定的统一事件和实体模型 |
 | AI 调查助手 | 规划中 | 最后接入，只消费受约束证据 |
 | 企业高可用与灾备 | 规划中 | 在单节点链路验证后实施 |
@@ -400,7 +412,7 @@ dbsleuth redact incident.zip --preview
 Phase 0  统一事件、实体、状态、Snapshot 和安全契约
 Phase 1  Oracle + Linux 离线解析器与可追溯报告
 Phase 2  Agent、环形缓冲、事故触发和现场冻结
-Phase 3  内存快照、连续线程追踪、受控动态探针和数据库现场
+Phase 3  eBPF、内存快照、连续线程追踪、受控动态探针和数据库现场
 Phase 4  Evidence Graph、规则 RCA、回放与知识案例
 Phase 5  受约束 AI、企业高可用、多租户、审计与灾备
 ```
@@ -420,6 +432,7 @@ Phase 5  受约束 AI、企业高可用、多租户、审计与灾备
 | 关键状态识别准确率 | `>= 90%` |
 | Agent 正常模式 CPU 预算 | `<= 2%` |
 | Agent 正常模式内存预算 | `<= 512 MB` |
+| eBPF 事件序列、溢出与丢失可观测率 | `100%` |
 | 未授权高等级采集 | `0` |
 
 ## 项目文档
@@ -431,6 +444,7 @@ Phase 5  受约束 AI、企业高可用、多租户、审计与灾备
 | [ROADMAP.md](ROADMAP.md) | 分阶段实现路线 |
 | [BACKLOG.md](BACKLOG.md) | 首批 Epic 与工程任务建议 |
 | [docs/STATE_ENGINE.md](docs/STATE_ENGINE.md) | 状态编码、状态转换、故障模式与质量约束 |
+| [docs/EBPF_OBSERVABILITY.md](docs/EBPF_OBSERVABILITY.md) | eBPF 内核观测、传感器、安全、降级和 Snapshot 联动 |
 | [docs/DBSLEUTH_INCIDENT_BUNDLE.md](docs/DBSLEUTH_INCIDENT_BUNDLE.md) | Agent、Collector 与分析引擎之间的事故数据契约 |
 | [docs/CASE_DEMO_STORAGE_INCIDENT.md](docs/CASE_DEMO_STORAGE_INCIDENT.md) | 从存储异常到 Oracle 故障的端到端图文案例 |
 | [README_EN.md](README_EN.md) | English overview |

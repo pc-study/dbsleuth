@@ -68,6 +68,12 @@ incident-bundle/
     observations.jsonl
     transitions.jsonl
   host/
+  kernel/
+    events.jsonl.gz
+    aggregates.jsonl
+    stacks.jsonl
+    sensor-health.json
+    capability-matrix.json
   process/
   threads/
   memory/
@@ -83,6 +89,8 @@ incident-bundle/
 ```
 
 `manifest.json` 记录 Schema 版本、事故 ID、资产、采集窗口、时区、时钟质量、Artifact 状态、数据等级、文件大小、SHA-256、脱敏状态、采集器版本和缺失原因。
+
+`kernel/sensor-health.json` 必须记录传感器、BPF 程序版本、Attach Point、运行模式、事件序列、Ring Buffer 水位、提交/消费/丢失数量、消费者延迟和回退模式。发生溢出时，相关 Artifact 标记为 `PARTIAL`，不能根据缺失事件得出健康结论。
 
 ## 5. 最小事件记录
 
@@ -188,3 +196,5 @@ Agent 或 Collector 可以提交由确定性规则识别的 `state_code`。分�
 ## 11. 配套案例
 
 [从存储异常到 Oracle 实例故障的图文案例 Demo](CASE_DEMO_STORAGE_INCIDENT.md) 展示 DBSleuth 如何冻结或导入 Incident Bundle，完成安全清点、事件标准化、状态识别、故障模式匹配、证据图和受约束 AI 解释。
+
+内核事件的传感器、统一头部、采集等级、丢失语义和安全约束见 [DBSleuth eBPF 内核动态观测设计](EBPF_OBSERVABILITY.md)。

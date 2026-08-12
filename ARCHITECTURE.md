@@ -103,6 +103,12 @@ State codes are partitioned by entity domain: `1xxx` host, `2xxx` process, `3xxx
 
 Formal reports must be navigable from Level 1 to Level 2 and then to the immutable Level 3 source evidence.
 
+## eBPF kernel observability layer
+
+On Linux, eBPF is the preferred L0.5 kernel observation path between the Agent survival layer and the host/process/thread entities. It captures and aggregates scheduler latency, process lifecycle, block IO, TCP/socket, memory pressure, Futex/lock, and bounded syscall events. It identifies the affected PID, TID, cgroup, device, or socket so the Snapshot Controller can target deeper thread, process, heap, or database evidence.
+
+Production probes must be signed and allowlisted, scoped to explicit targets, governed by resource budgets and TTL leases, and protected by a Kill Switch. Sequence gaps, Ring Buffer overflow, lost events, symbol quality, and fallback mode are evidence-quality fields; absence of events must never imply health. Unsupported kernels fall back to perf/ftrace/procfs/netlink without preventing the base Agent from starting. Windows uses ETW/WCT/WFP/Performance Counter as its primary equivalent path. See [docs/EBPF_OBSERVABILITY.md](docs/EBPF_OBSERVABILITY.md).
+
 ## DBSleuth Incident Bundle adapter
 
 The Incident Bundle adapter accepts sanitized, versioned events, metric windows, state observations, topology, AWR/APM evidence, thread and memory snapshots, change records, and selected attachments produced by DBSleuth collectors or offline import tools. It must not import control-plane credentials, database connection settings, private keys, or the DBSleuth metadata database.

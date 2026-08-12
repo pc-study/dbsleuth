@@ -11,6 +11,8 @@ DBSleuth imports database and operating-system logs, normalizes timestamps, grou
 
 The planned State Intelligence Engine projects cited events into versioned state observations, transitions, and failure patterns. States compress the incident timeline but never replace the original evidence.
 
+The planned Linux eBPF observation layer captures bounded scheduler, process, Block IO, TCP/socket, memory-pressure, and lock events. It identifies the affected thread, process, cgroup, device, or connection and triggers targeted snapshots instead of indiscriminate full-host dumps. Unsupported kernels fall back safely, and event loss is reported as incomplete evidence rather than interpreted as health.
+
 ## Product promise
 
 Given an incident bundle, answer four questions:
@@ -75,6 +77,7 @@ Proceed beyond MVP only if a blinded evaluation over at least 30 anonymized real
 - [Backlog](BACKLOG.md)
 - [State Intelligence Engine](docs/STATE_ENGINE.md)
 - [DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md)
+- [eBPF kernel observability](docs/EBPF_OBSERVABILITY.md)
 - [Illustrated storage-to-Oracle case Demo](docs/CASE_DEMO_STORAGE_INCIDENT.md)
 
 ## License

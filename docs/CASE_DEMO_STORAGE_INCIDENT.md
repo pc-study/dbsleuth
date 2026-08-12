@@ -11,7 +11,7 @@
 
 ## 1. Demo 目标
 
-本案例演示 DBSleuth 如何把分散在 Linux、存储、Oracle、Listener、APM 和监控系统中的信息，转换为一条可以审计的故障演化链：
+本案例演示 DBSleuth 如何把分散在 eBPF、Linux、存储、Oracle、Listener、APM 和监控系统中的信息，转换为一条可以审计的故障演化链：
 
 ```text
 存储路径超时
@@ -72,6 +72,9 @@ DEMO-20260812-001/
 ├── manifest.json
 ├── linux/
 │   └── messages
+├── kernel/
+│   ├── block-io-events.jsonl
+│   └── sensor-health.json
 ├── oracle/
 │   ├── alert_ORCL1.log
 │   ├── asm_alert.log
@@ -94,6 +97,22 @@ DEMO-20260812-001/
 9220 Aug 12 01:42:14 db-node-01 multipathd: mpathb: remaining active paths: 0
 9221 Aug 12 01:42:16 db-node-01 kernel: Buffer I/O error on dev dm-2, logical block 2304906
 ```
+
+eBPF 在日志出现前后保存同一设备的 IO 提交与完成关系：
+
+文件：`kernel/block-io-events.jsonl`
+
+```json
+{"time":"2026-08-12T01:42:12.941+08:00","pid":2188,"tid":8821,"device":"8:16","operation":"write","size_bytes":131072,"queue_ms":903.4,"service_ms":25.0,"total_ms":928.4,"state_code":7030,"reason_code":"EBPF_BLOCK_QUEUE_DELAY","sequence":99182}
+```
+
+文件：`kernel/sensor-health.json`
+
+```json
+{"sensor":"block_io","status":"COMPLETE","submitted_events":1482,"consumed_events":1482,"lost_events":0,"fallback_mode":null}
+```
+
+这项证据把“设备平均延迟升高”推进为“目标数据库线程向同一设备提交的写请求主要耗时在队列等待”，并证明事故窗口没有 eBPF 事件丢失。
 
 ### 3.2 ASM 原始证据
 
@@ -178,7 +197,7 @@ Files                  9
 Expanded size          18.6 MB
 Archive safety         PASS
 Checksum verification  PASS
-Detected sources       Linux, Oracle Alert, ASM, Listener, DBSleuth Snapshot
+Detected sources       eBPF Block IO, Linux, Oracle Alert, ASM, Listener, DBSleuth Snapshot
 Time range             2026-08-12 01:30:00 +08:00 - 02:15:00 +08:00
 Unsupported files      0
 Warnings               0
@@ -523,7 +542,8 @@ demo-report/
 ## 15. Demo 验收清单
 
 - [ ] 输入包安全校验通过，原始文件未被修改；
-- [ ] Linux、ASM、Oracle、Listener 和 DBSleuth Snapshot 事件进入统一时间线；
+- [ ] eBPF、Linux、ASM、Oracle、Listener 和 DBSleuth Snapshot 事件进入统一时间线；
+- [ ] eBPF 序列、Ring Buffer 丢失和 Sensor Health 进入证据完整度计算；
 - [ ] 每个状态都至少引用一个标准事件；
 - [ ] 每个事件都能回到准确文件和行号；
 - [ ] 状态链顺序与事故时间一致；
@@ -552,4 +572,5 @@ demo-report/
 
 - [State Intelligence Engine 设计](STATE_ENGINE.md)
 - [DBSleuth Incident Bundle 设计](DBSLEUTH_INCIDENT_BUNDLE.md)
+- [DBSleuth eBPF 内核动态观测设计](EBPF_OBSERVABILITY.md)
 - [DBSleuth 总体架构](../ARCHITECTURE.md)

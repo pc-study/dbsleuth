@@ -93,8 +93,25 @@
 4. `parser: parse Linux syslog/messages records`
 5. `report: render JSON and evidence-indexed Markdown`
 
+## Epic I — eBPF kernel observability
+
+- [ ] Implement kernel, BTF, Program/Map/Helper, permission, and fallback capability probing.
+- [ ] Build a minimal privileged loader with signed objects, hashes, leases, budgets, and Kill Switch.
+- [ ] Define the versioned Kernel Event Header with dual clocks, sequence, identity, and correlation anchors.
+- [ ] Report Map usage, Ring Buffer watermarks, event loss, consumer lag, and probe overhead.
+- [ ] Implement scheduler, Run Queue, On/Off-CPU, and thread-lifecycle sensors.
+- [ ] Implement Block IO queue/service latency, device, process/thread, and error sensors.
+- [ ] Implement TCP state, retransmit, reset, Socket Cookie, and process/thread correlation sensors.
+- [ ] Implement page-fault, reclaim, allocation-failure, OOM, and OOM Kill sensors.
+- [ ] Implement process fork/exec/exit, Build ID, cgroup, and Namespace sensors.
+- [ ] Add targeted Futex/lock, syscall latency, and uprobe/USDT probes.
+- [ ] Build offline symbol resolution with explicit complete/partial/missing status.
+- [ ] Map eBPF events to deterministic states and targeted Snapshot/Dump triggers.
+- [ ] Test automatic fallback on unsupported kernels without failing the base Agent.
+
 ## Design documents
 
 - [State Intelligence Engine](docs/STATE_ENGINE.md)
 - [DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md)
+- [eBPF kernel observability](docs/EBPF_OBSERVABILITY.md)
 - [Storage-to-Oracle case Demo](docs/CASE_DEMO_STORAGE_INCIDENT.md)
