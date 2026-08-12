@@ -4,7 +4,7 @@
 |---|---|
 | 版本 | v0.1 Draft |
 | 状态 | 产品与架构演示文档，功能待实现 |
-| 场景 | TraceMind Incident Snapshot + DBSleuth 离线证据分析 |
+| 场景 | DBSleuth Incident Snapshot + 离线证据分析 |
 
 > [!IMPORTANT]
 > 本文使用完全虚构、已脱敏的数据说明目标工作流，不代表当前版本已经实现这些命令和界面。示例中的 IP 属于文档保留地址，日志内容也不对应任何真实生产系统。
@@ -49,7 +49,7 @@ flowchart LR
     P --> S["SAN Storage"]
 
     Z["Zabbix / Prometheus"] -. "指标与告警" .-> D
-    T["TraceMind"] -. "拓扑、APM、快照" .-> A
+    T["DBSleuth Agent"] -. "拓扑、APM、快照" .-> A
     T -. "主机与数据库资产" .-> D
 ```
 
@@ -65,7 +65,7 @@ flowchart LR
 
 ## 3. 事故输入
 
-TraceMind 在用户确认脱敏预览后导出 Incident Bundle；没有 TraceMind 时，也可以直接提供日志目录或压缩包。
+DBSleuth Agent 在事故窗口冻结现场并按策略生成 Incident Bundle；没有 Agent 时，也可以直接提供日志目录、压缩包或第三方导出数据。
 
 ```text
 DEMO-20260812-001/
@@ -76,7 +76,7 @@ DEMO-20260812-001/
 │   ├── alert_ORCL1.log
 │   ├── asm_alert.log
 │   └── listener.log
-├── tracemind/
+├── telemetry/
 │   ├── alerts.jsonl
 │   ├── apm-spans.jsonl
 │   ├── asset-topology.json
@@ -127,9 +127,9 @@ DEMO-20260812-001/
 4413 TNS-12514: TNS:listener does not currently know of service requested in connect descriptor
 ```
 
-### 3.5 TraceMind 指标与 APM 证据
+### 3.5 DBSleuth 指标与 APM 证据
 
-文件：`tracemind/metric-windows.jsonl`
+文件：`telemetry/metric-windows.jsonl`
 
 ```json
 {"time":"2026-08-12T01:42:00+08:00","entity_id":"storage:mpathb","metric":"disk.await_ms","value":928.4,"threshold":50,"window":"2m"}
@@ -137,7 +137,7 @@ DEMO-20260812-001/
 {"time":"2026-08-12T01:42:00+08:00","entity_id":"host:db-node-01","metric":"memory.usage_pct","value":62.1,"threshold":85,"window":"2m"}
 ```
 
-文件：`tracemind/apm-spans.jsonl`
+文件：`telemetry/apm-spans.jsonl`
 
 ```json
 {"time":"2026-08-12T01:45:22+08:00","entity_id":"service:mes-api","db_entity_id":"db:orcl1","trace_id":"demo-trace-001","operation":"POST /work-order","duration_ms":30012,"status":"deadline_exceeded"}
@@ -178,7 +178,7 @@ Files                  9
 Expanded size          18.6 MB
 Archive safety         PASS
 Checksum verification  PASS
-Detected sources       Linux, Oracle Alert, ASM, Listener, TraceMind Snapshot
+Detected sources       Linux, Oracle Alert, ASM, Listener, DBSleuth Snapshot
 Time range             2026-08-12 01:30:00 +08:00 - 02:15:00 +08:00
 Unsupported files      0
 Warnings               0
@@ -466,13 +466,13 @@ Report                demo-report/incident-report.html
 
 用户点击任意证据引用时，报告展示原始文本、前后文、文件摘要、解析器版本和规则版本，而不是只展示一句二次加工的结论。
 
-## 12. TraceMind 与 DBSleuth 的完整交互
+## 12. DBSleuth 现场冻结与分析流程
 
 ```mermaid
 sequenceDiagram
     actor U as "DBA"
-    participant T as "TraceMind"
-    participant B as "DBSleuth"
+    participant T as "DBSleuth Agent"
+    participant B as "DBSleuth Analysis"
     participant A as "受控 AI"
 
     U->>T: "选择事故窗口和资产"
@@ -488,7 +488,7 @@ sequenceDiagram
     U->>U: "人工确认或否决根因候选"
 ```
 
-DBSleuth 也可以脱离 TraceMind 独立分析 Oracle 和 Linux 日志。没有监控、APM 或拓扑时，报告会显示数据缺口并降低置信度，而不是虚构缺失链路。
+DBSleuth 也可以在没有 Agent 的情况下直接分析 Oracle 和 Linux 日志。没有监控、APM 或拓扑时，报告会显示数据缺口并降低置信度，而不是虚构缺失链路。
 
 ## 13. 失败与降级场景
 
@@ -523,7 +523,7 @@ demo-report/
 ## 15. Demo 验收清单
 
 - [ ] 输入包安全校验通过，原始文件未被修改；
-- [ ] Linux、ASM、Oracle、Listener 和 TraceMind 事件进入统一时间线；
+- [ ] Linux、ASM、Oracle、Listener 和 DBSleuth Snapshot 事件进入统一时间线；
 - [ ] 每个状态都至少引用一个标准事件；
 - [ ] 每个事件都能回到准确文件和行号；
 - [ ] 状态链顺序与事故时间一致；
@@ -551,5 +551,5 @@ demo-report/
 ## 17. 设计依据
 
 - [State Intelligence Engine 设计](STATE_ENGINE.md)
-- [TraceMind 与 DBSleuth 集成设计](TRACEMIND_INTEGRATION.md)
+- [DBSleuth Incident Bundle 设计](DBSLEUTH_INCIDENT_BUNDLE.md)
 - [DBSleuth 总体架构](../ARCHITECTURE.md)

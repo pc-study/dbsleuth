@@ -74,7 +74,7 @@
 - [ ] Preserve supporting evidence, contradictions, topology checks, and limitations.
 - [ ] Add golden tests for out-of-order, duplicate, missing, and flapping inputs.
 
-## Epic H — TraceMind integration
+## Epic H — DBSleuth Incident Bundle
 
 - [ ] Publish the sanitized Incident Bundle manifest and compatibility rules.
 - [ ] Import versioned timeline, alert, metric-window, topology, and state records.
@@ -96,5 +96,5 @@
 ## Design documents
 
 - [State Intelligence Engine](docs/STATE_ENGINE.md)
-- [TraceMind integration](docs/TRACEMIND_INTEGRATION.md)
+- [DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md)
 - [Storage-to-Oracle case Demo](docs/CASE_DEMO_STORAGE_INCIDENT.md)

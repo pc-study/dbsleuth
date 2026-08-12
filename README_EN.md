@@ -74,7 +74,7 @@ Proceed beyond MVP only if a blinded evaluation over at least 30 anonymized real
 - [Roadmap](ROADMAP.md)
 - [Backlog](BACKLOG.md)
 - [State Intelligence Engine](docs/STATE_ENGINE.md)
-- [TraceMind integration](docs/TRACEMIND_INTEGRATION.md)
+- [DBSleuth Incident Bundle](docs/DBSLEUTH_INCIDENT_BUNDLE.md)
 - [Illustrated storage-to-Oracle case Demo](docs/CASE_DEMO_STORAGE_INCIDENT.md)
 
 ## License
