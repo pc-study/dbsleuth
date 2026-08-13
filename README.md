@@ -193,6 +193,9 @@ eBPF 进入 Post-MVP 生产实现前，还必须满足：不支持的内核自�
 | [docs/EBPF_OBSERVABILITY.md](docs/EBPF_OBSERVABILITY.md) | Post-MVP eBPF 传感器、安全、降级和 Snapshot 联动设计 |
 | [docs/DBSLEUTH_INCIDENT_BUNDLE.md](docs/DBSLEUTH_INCIDENT_BUNDLE.md) | Post-MVP 事故数据契约提案 |
 | [docs/CASE_DEMO_STORAGE_INCIDENT.md](docs/CASE_DEMO_STORAGE_INCIDENT.md) | 合成的存储到 Oracle 故障案例 |
+| [docs/SEVERITY.md](docs/SEVERITY.md) | **权威** 严重度枚举定义（critical/high/medium/low/info/unknown） |
+| [docs/EXIT_CODES.md](docs/EXIT_CODES.md) | CLI 退出码规范（0/1/2/3/4/5/6）与机器可读错误码 |
+| [docs/REDACTION_POLICY.md](docs/REDACTION_POLICY.md) | 脱敏策略：强制集（Tier 1）+ 候选集（Tier 2）+ fail-safe |
 | [README_EN.md](README_EN.md) | English overview |
 
 ## 参与贡献
