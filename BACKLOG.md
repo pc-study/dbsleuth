@@ -45,11 +45,22 @@
 
 - [ ] Render versioned JSON output.
 - [ ] Render Markdown incident report.
-- [ ] Render self-contained, escaped HTML report.
+- [ ] Render self-contained HTML report using `html/template` ONLY (context auto-escaping). Assert via grep/build step that `text/template` is never imported by any HTML rendering path.
+- [ ] Escape ALL fields sourced from the input bundle in HTML output (not just "log content"): `source.path`, `entity_id`, `hostname`, `summary`, `raw`, `codes`, `attributes`, SQL `query_text`.
 - [ ] Add source-file and line-range evidence anchors.
-- [ ] Detect candidate IPs, hostnames, database names, usernames, paths, emails, and connection strings.
-- [ ] Add redaction preview and allow/deny rules.
+- [ ] Implement the **mandatory redaction set** (Tier 1) per [docs/REDACTION_POLICY.md](docs/REDACTION_POLICY.md): Oracle connect strings, TNS PASSWORD, password/secret/token/api-key keyword assignments, AWS keys, private key blocks, JWTs, GitHub tokens, RFC1918 IPs. These are always redacted; not configurable off; only bypassable via a reviewed, committed allow rule.
+- [ ] Implement the **candidate set** (Tier 2, opt-in): hostnames, database names, usernames, paths, emails, MAC, non-Oracle connection strings. Detect + preview + user confirm.
+- [ ] Add redaction preview and allow/deny rules. Allow rules persisted to a versioned allowlist and recorded in the report's `redaction_summary`.
+- [ ] Fail-safe: if a file cannot be scanned (encoding/parse), it MUST NOT be exported in plaintext — drop with `DBSLEUTH_E_REDACT_SCAN_FAILED` or abort.
+- [ ] Add a regression test asserting every Tier 1 fixture sample is masked in JSON/Markdown/HTML output (zero raw matches).
 - [ ] Create sanitized bundle without changing originals.
+
+## Epic B — Safety and archive handling (revised)
+
+- [ ] Implement configurable safety limits with the defaults from ARCHITECTURE.md: max expanded size 1 GiB, single file 256 MiB, file count 10,000, nesting depth 10, compression ratio 100:1.
+- [ ] On any limit hit: stop, emit `PARTIAL` (exit code 2), emit `DBSLEUTH_E_LIMIT_*` on stderr, never silently continue.
+- [ ] After extraction, recompute SHA-256 for every extracted file and require exact match with manifest; mismatch → exit code 5 (`INTEGRITY_FAILURE`).
+- [ ] Add a regression test asserting no execution path consumes parsed input content (no `os/exec` over parsed data, SQL never handed to `database/sql`).
 
 ## Epic F — Quality and release
 
